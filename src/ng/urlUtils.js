@@ -6,7 +6,7 @@
 // doesn't know about mocked locations and resolves URLs to the real document - which is
 // exactly the behavior needed here.  There is little value is mocking these out for this
 // service.
-var urlParsingNode = document.createElement("a");
+var urlParsingNode = document.createElement("div");
 var originUrl = urlResolve(window.location.href, true);
 
 
@@ -65,27 +65,24 @@ var originUrl = urlResolve(window.location.href, true);
 function urlResolve(url, base) {
   var href = url;
 
-  if (msie) {
-    // Normalize before parse.  Refer Implementation Notes on why this is
-    // done in two steps on IE.
-    urlParsingNode.setAttribute("href", href);
-    href = urlParsingNode.href;
+  urlParsingNode.innerHTML= '<a href="'+encodeURI(url)+'"></a>';
+  var parsedUrlNode = urlParsingNode.firstChild;
+  if (msie && msie > 7) {
+    parsedUrlNode.setAttribute("href", parsedUrlNode.href);
   }
 
-  urlParsingNode.setAttribute('href', href);
-
-  // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
+  // parsedUrlNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
   return {
-    href: urlParsingNode.href,
-    protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-    host: urlParsingNode.host,
-    search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-    hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-    hostname: urlParsingNode.hostname,
-    port: urlParsingNode.port,
-    pathname: (urlParsingNode.pathname.charAt(0) === '/')
-      ? urlParsingNode.pathname
-      : '/' + urlParsingNode.pathname
+    href: parsedUrlNode.href,
+    protocol: parsedUrlNode.protocol ? parsedUrlNode.protocol.replace(/:$/, '') : '',
+    host: parsedUrlNode.host,
+    search: parsedUrlNode.search ? parsedUrlNode.search.replace(/^\?/, '') : '',
+    hash: parsedUrlNode.hash ? parsedUrlNode.hash.replace(/^#/, '') : '',
+    hostname: parsedUrlNode.hostname,
+    port: parsedUrlNode.port,
+    pathname: (parsedUrlNode.pathname.charAt(0) === '/')
+      ? parsedUrlNode.pathname
+      : '/' + parsedUrlNode.pathname
   };
 }
 
