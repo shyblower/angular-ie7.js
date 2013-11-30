@@ -1,6 +1,8 @@
 AngularJS [![Build Status](https://travis-ci.org/angular/angular.js.png?branch=master)](https://travis-ci.org/angular/angular.js)
 =========
 
+Fixed to work on IE7 (and IE6 as good as possible).
+
 AngularJS lets you write client-side web applications as if you had a smarter browser.  It lets you
 use good old HTML (or HAML, Jade and friends!) as your template language and lets you extend HTML’s
 syntax to express your application’s components clearly and succinctly.  It automatically
